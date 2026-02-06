@@ -1,0 +1,39 @@
+name: Publicación Automática
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Compilando para iOS y macOS
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Instalar dependencias
+        run: flutter pub get
+
+      - name: Habilitar macOS
+        run: flutter config --enable-macos-desktop
+
+      - name: Build macOS
+        run: flutter build macos --release
+
+      - name: Build iOS (sin firma)
+        run: flutter build ios --release --no-codesign
+
+      - name: Crear Release y subir archivos
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/macos/Build/Products/Release/*.app
+            build/ios/iphoneos/Runner.app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
