@@ -29,11 +29,17 @@ jobs:
       - name: Build iOS (sin firma)
         run: flutter build ios --no-codesign
 
+      - name: Comprimir ejecutables
+        run: |
+          cd build/macos/Build/Products/Release
+          zip -r myapp-macOS.app.zip myapp.app
+
+          cd ../../../../ios/iphoneos
+          zip -r myapp-iOS.app.zip Runner.app
+
       - name: Crear Release y subir archivos
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/macos/Build/Products/Release/*.app
-            build/ios/iphoneos/Runner.app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            build/macos/Build/Products/Release/myapp-macOS.app.zip
+            build/ios/iphoneos/myapp-iOS.app.zip
