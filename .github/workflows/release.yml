@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Compilando para iOS y macOS
@@ -20,14 +23,11 @@ jobs:
       - name: Instalar dependencias
         run: flutter pub get
 
-      - name: Habilitar macOS
-        run: flutter config --enable-macos-desktop
-
       - name: Build macOS
-        run: flutter build macos --release
+        run: flutter build macos
 
       - name: Build iOS (sin firma)
-        run: flutter build ios --release --no-codesign
+        run: flutter build ios --no-codesign
 
       - name: Crear Release y subir archivos
         uses: softprops/action-gh-release@v1
