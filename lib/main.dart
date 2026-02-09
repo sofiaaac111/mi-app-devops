@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() => runApp(const EcoLogApp());
 
@@ -7,16 +8,22 @@ class EcoLogApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: EcoLog(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: EcoLog());
   }
 }
 
 class EcoLog extends StatefulWidget {
   @override
   State<EcoLog> createState() => _EcoLogState();
+}
+
+Color randomColor() {
+  return Color.fromARGB(
+    255,
+    Random().nextInt(256),
+    Random().nextInt(256),
+    Random().nextInt(256),
+  );
 }
 
 class _EcoLogState extends State<EcoLog> {
@@ -26,18 +33,14 @@ class _EcoLogState extends State<EcoLog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("EcoLog – App Multiplataforma"),
-      ),
+      appBar: AppBar(title: const Text("EcoLog – App Multiplataforma")),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
             child: TextField(
               controller: _input,
-              decoration: const InputDecoration(
-                labelText: "Nombre del punto",
-              ),
+              decoration: const InputDecoration(labelText: "Nombre del punto"),
             ),
           ),
           ElevatedButton(
@@ -49,11 +52,32 @@ class _EcoLogState extends State<EcoLog> {
             },
             child: const Text("Registrar"),
           ),
+
           Expanded(
-            child: ListView.builder(
-              itemCount: _data.length,
-              itemBuilder: (context, index) =>
-                  ListTile(title: Text(_data[index])),
+            child: SingleChildScrollView(
+              child: Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: _data.map((item) {
+                  return Container(
+                    width: 100,
+                    height: 100,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: randomColor(),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      item,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],
