@@ -26,8 +26,15 @@ Color randomColor() {
   );
 }
 
+class Punto {
+  final String nombre;
+  final Color color;
+
+  Punto(this.nombre, this.color);
+}
+
 class _EcoLogState extends State<EcoLog> {
-  final List<String> _data = [];
+  final List<Punto> _data = [];
   final TextEditingController _input = TextEditingController();
 
   @override
@@ -46,29 +53,31 @@ class _EcoLogState extends State<EcoLog> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                _data.add(_input.text);
+                _data.add(Punto(_input.text, randomColor()));
                 _input.clear();
               });
             },
             child: const Text("Registrar"),
           ),
 
+          const SizedBox(height: 20), //espacio entre botón y círculos
+
           Expanded(
             child: SingleChildScrollView(
               child: Wrap(
                 spacing: 16,
-                runSpacing: 16,
+                runSpacing: 26,
                 children: _data.map((item) {
                   return Container(
                     width: 100,
                     height: 100,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: randomColor(),
+                      color: item.color,
                       shape: BoxShape.circle,
                     ),
                     child: Text(
-                      item,
+                      item.nombre,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.white,
